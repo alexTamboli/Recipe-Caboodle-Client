@@ -7,7 +7,7 @@ import { SearchIcon } from "@heroicons/react/solid";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 
 import Logout from "../accounts/Logout";
-// import { loadUser, getAvatar } from "../../redux/actions/user";
+import { fetchUser } from "../../redux/features/user/userSlice";
 
 const userNavigation = [{ name: "Dashboard", to: "/dashboard" }];
 
@@ -16,23 +16,17 @@ function classNames(...classes) {
 }
 
 export default function Header() {
-    // const { token } = useSelector((state) => state.auth);
-    // const { user, avatar } = useSelector((state) => state.user);
-
+    const { token } = useSelector((state) => state.auth);
+    const user = useSelector((state) => state.user);
     const [modal, setModal] = useState(false);
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     if (token) {
-    //         dispatch(loadUser());
-    //         dispatch(getAvatar());
-    //     }
-    // }, [token]);
-
-    const token = "token";
-    const avatar = "avatar";
-    const user = "user";
+    useEffect(() => {
+        if (token) {
+            dispatch(fetchUser());
+        }
+    }, [token]);
 
     return (
         <>
@@ -110,8 +104,8 @@ export default function Header() {
                                                     <img
                                                         className="h-8 w-8 rounded-full"
                                                         src={
-                                                            avatar && avatar.avatar
-                                                                ? avatar.avatar
+                                                            user && user.avatar
+                                                                ? user.avatar
                                                                 : "https://res.cloudinary.com/dmtc1wlgq/image/upload/v1641911896/media/avatar/default_zrdbiq.png"
                                                         }
                                                         alt=""
@@ -233,8 +227,8 @@ export default function Header() {
                                             <img
                                                 className="h-10 w-10 rounded-full"
                                                 src={
-                                                    avatar
-                                                        ? avatar.avatar
+                                                    user
+                                                        ? user.avatar
                                                         : "https://res.cloudinary.com/dmtc1wlgq/image/upload/v1641911896/media/avatar/default_zrdbiq.png"
                                                 }
                                                 alt=""
