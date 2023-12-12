@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../../axios/axios';
+import axiosInstance from '../../../utils/axios';
 
 const initialState = {
     token: JSON.parse(localStorage.getItem("token")),

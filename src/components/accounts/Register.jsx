@@ -2,12 +2,13 @@ import { LockClosedIcon } from "@heroicons/react/solid";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchToken } from "../../redux/features/auth/authSlice";
 
-export default function Login() {
+export default function Register() {
     const navigate = useNavigate();
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const { token } = useSelector((state) => state.auth);
 
@@ -21,13 +22,15 @@ export default function Login() {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-        dispatch(fetchToken({ email, password }))
-        // dispatch(
-        //     login({
-        //         email: email,
-        //         password: password,
-        //     })
-        // );
+        dispatch(
+            fetchToken({ username, email, password, confirmPassword })
+            // register({
+            //     username: username,
+            //     email: email,
+            //     password: password,
+            //     confirmPassword: confirmPassword,
+            // })
+        );
     };
 
     return (
@@ -35,12 +38,26 @@ export default function Login() {
             <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-md w-full space-y-8">
                     <div className="text-center">
-                        <h2 className="mt-6 text-3xl font-light text-teal-900">
-                            Login to your account
-                        </h2>
+                        <h2 className="mt-6 text-3xl font-light text-teal-900">Register</h2>
                     </div>
                     <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
+                        <input type="hidden" name="remember" defaultValue="true" />
                         <div className="rounded-md shadow-sm -space-y-px">
+                            <div>
+                                <label htmlFor="username" className="sr-only">
+                                    Username
+                                </label>
+                                <input
+                                    id="username"
+                                    name="username"
+                                    type="text"
+                                    autoComplete="username"
+                                    required
+                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                                    placeholder="Username"
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                            </div>
                             <div>
                                 <label htmlFor="email-address" className="sr-only">
                                     Email address
@@ -71,18 +88,22 @@ export default function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
+                            <div>
+                                <label htmlFor="password" className="sr-only">
+                                    Confirm Password
+                                </label>
+                                <input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    autoComplete="current-password"
+                                    required
+                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                                    placeholder="confirm Password"
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                            </div>
                         </div>
-
-                        {/* <div className="flex items-center justify-between">
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-teal-600 hover:text-teal-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div> */}
 
                         <div>
                             <button
@@ -95,15 +116,15 @@ export default function Login() {
                                         aria-hidden="true"
                                     />
                                 </span>
-                                Login
+                                Register
                             </button>
                         </div>
                         <div className="text-sm">
                             <Link
-                                to="/register"
+                                to="/login"
                                 className="font-medium text-teal-600 hover:text-teal-500"
                             >
-                                Don't have an account? Register
+                                Already have an account? Login
                             </Link>
                         </div>
                     </form>

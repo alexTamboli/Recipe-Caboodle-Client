@@ -52,8 +52,8 @@ export default function Header() {
                                     </div>
                                 </div>
                                 <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">
-                                    <div className="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
-                                        <div className="w-full">
+                                    <div className="flex items-center justify-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
+                                        <div>
                                             <label htmlFor="search" className="sr-only">
                                                 Search
                                             </label>
