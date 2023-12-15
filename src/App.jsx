@@ -1,33 +1,36 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/layouts/Header";
+import Landing from "./components/layouts/Landing";
 import './App.css'
+import Login from './components/accounts/Login';
+import Register from './components/accounts/Register';
+import Dashboard from './components/layouts/Dashboard';
+import { useSelector } from 'react-redux';
+import Loading from './components/layouts/Loading';
+import PrivateRoute from './utils/PrivateRoute';
+import Profile from './components/accounts/Profile';
+import Explore from './components/recipe/Explore';
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const authLoading = useSelector(state => state.auth.loading);
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Router>
+        <Header />
+        {authLoading ? <Loading /> :
+          <Routes>
+            <Route exact path="/" element={<Landing />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
+            <Route exact path="/recipe" element={<Explore />} />
+            <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} >
+              <Route path="profile" element={<Profile />} />
+            </Route>
+          </Routes>
+        }
+      </Router>
     </>
   )
 }
