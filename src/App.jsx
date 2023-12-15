@@ -4,11 +4,13 @@ import Header from "./components/layouts/Header";
 import Landing from "./components/layouts/Landing";
 import './App.css'
 import Login from './components/accounts/Login';
+import Register from './components/accounts/Register';
 import Dashboard from './components/layouts/Dashboard';
 import { useSelector } from 'react-redux';
 import Loading from './components/layouts/Loading';
 import PrivateRoute from './utils/PrivateRoute';
-import Register from './components/accounts/Register';
+import Profile from './components/accounts/Profile';
+import Explore from './components/recipe/Explore';
 
 function App() {
 
@@ -20,9 +22,12 @@ function App() {
         {authLoading ? <Loading /> :
           <Routes>
             <Route exact path="/" element={<Landing />} />
-            <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} />
-            <Route exact path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route exact path="/register" element={<Register />} />
+            <Route exact path="/recipe" element={<Explore />} />
+            <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} >
+              <Route path="profile" element={<Profile />} />
+            </Route>
           </Routes>
         }
       </Router>

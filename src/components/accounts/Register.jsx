@@ -2,6 +2,7 @@ import { LockClosedIcon } from "@heroicons/react/solid";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { registerFetchToken } from "../../redux/features/auth/authSlice";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function Register() {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         dispatch(
-            fetchToken({ username, email, password, confirmPassword })
+            registerFetchToken({ username, email, password, confirmPassword })
             // register({
             //     username: username,
             //     email: email,

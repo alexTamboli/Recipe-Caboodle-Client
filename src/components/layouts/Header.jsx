@@ -9,7 +9,7 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Logout from "../accounts/Logout";
 import { fetchUser } from "../../redux/features/user/userSlice";
 
-const userNavigation = [{ name: "Dashboard", to: "/dashboard" }];
+const userNavigation = [{ name: "Dashboard", to: "/dashboard/profile" }];
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
