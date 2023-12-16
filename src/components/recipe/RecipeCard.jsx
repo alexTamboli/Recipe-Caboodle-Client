@@ -5,12 +5,24 @@ import { HeartIcon as SolidHeart } from "@heroicons/react/solid";
 
 import QuickView from "./QuickView";
 import axiosInstance from "../../utils/axios";
+import { useDispatch } from "react-redux";
+// import { fetchUserExtraDetails } from "../../redux/features/user/userSlice";
 
-export default function RecipeCard({ recipe, quickview }) {
+export default function RecipeCard({ recipe, quickview, liked_array }) {
     const [open, setOpen] = useState(false);
-    // const [id, setId] = useState(null);
-    const [like, setLike] = useState(false);
 
+    // const [id, setId] = useState(null);
+    const linearSearch = (arr, target) => {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === target) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    // const dispatch = useDispatch();
+    const [like, setLike] = useState(linearSearch(liked_array, recipe.id));
 
     const likeRecipe = async (id) => {
         try {
@@ -28,9 +40,9 @@ export default function RecipeCard({ recipe, quickview }) {
         }
     };
 
-    useEffect(() => {
-
-    }, [])
+    // useEffect(() => {
+    //     dispatch(fetchUserExtraDetails())
+    // }, [])
 
 
     return (

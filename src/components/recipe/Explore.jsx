@@ -3,10 +3,15 @@ import { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import axiosInstance from "../../utils/axios";
 import Loading from "../layouts/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserExtraDetails } from "../../redux/features/user/userSlice";
 
 export default function Explore() {
     const [recipes, setRecipes] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const cardLoad = useSelector(state => state.user.loading);
+    const liked_array = useSelector(state => state.user.liked_recipes);
+    const dispatch = useDispatch();
 
     const getRecipes = async () => {
         try {
@@ -20,8 +25,10 @@ export default function Explore() {
         }
     };
 
+
     useEffect(() => {
         getRecipes();
+        dispatch(fetchUserExtraDetails());
     }, []);
 
     if (recipes && recipes.length === 0)
@@ -68,11 +75,14 @@ export default function Explore() {
                             what doesn’t."
                         </p>
                     </div>
-                    <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {recipes.map((recipe) => (
-                            <RecipeCard recipe={recipe} quickview={true} />
-                        ))}
-                    </div>
+                    {cardLoad ? <Loading /> :
+                        <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                            {recipes.map((recipe, id) => (
+                                <RecipeCard key={id} recipe={recipe} liked_array={liked_array} quickview={true} />
+                            ))}
+                        </div>
+                    }
+
                 </div>
             }
         </>

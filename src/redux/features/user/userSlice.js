@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utils/axios';
+import axios from 'axios';
 
 const initialState = {
     username: "",
@@ -49,7 +50,8 @@ export const changeAvatar = createAsyncThunk(
     'user/changeAvatar',
     async (data) => {
         axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
-        const res = await axiosInstance.put('/user/profile/avatar/', data);
+        axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
+        const res = await axiosInstance.patch('/user/profile/avatar/', data);
         return res.data;
     }
 )
@@ -65,6 +67,15 @@ export const fetchUser = createAsyncThunk(
             avatar: resAvatar.data.avatar,
         }
         return res;
+    }
+)
+
+export const fetchUserExtraDetails = createAsyncThunk(
+    'user/fetchUserExtraDetails',
+    async () => {
+        axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
+        const res = await axiosInstance.get('/user/profile');
+        return res.data;
     }
 )
 
@@ -129,6 +140,22 @@ const userSlice = createSlice({
             state.loading = false;
         })
         builder.addCase(changeAvatar.pending, (state, action) => {
+            state.loading = true;
+        })
+
+
+        builder.addCase(fetchUserExtraDetails.fulfilled, (state, action) => {
+            state.bio = action.payload.bio;
+            state.bookmarks = action.payload.bookmarks;
+            state.liked_recipes = action.payload.liked_recipes;
+            state.loading = false;
+            state.error = "";
+        })
+        builder.addCase(fetchUserExtraDetails.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.loading = false;
+        })
+        builder.addCase(fetchUserExtraDetails.pending, (state, action) => {
             state.loading = true;
         })
     }

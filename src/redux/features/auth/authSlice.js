@@ -34,6 +34,15 @@ export const loginFetchToken = createAsyncThunk(
     }
 )
 
+export const logout = createAsyncThunk(
+    'auth/logout',
+    async (refresh) => {
+        const body = JSON.stringify({ refresh });
+        await axiosInstance.post('/user/logout/', body);
+        localStorage.removeItem("token");
+    }
+)
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -51,6 +60,8 @@ const authSlice = createSlice({
         builder.addCase(loginFetchToken.pending, (state, action) => {
             state.loading = true;
         })
+
+
         builder.addCase(registerFetchToken.fulfilled, (state, action) => {
             state.token = action.payload;
             state.loading = false;
@@ -62,6 +73,20 @@ const authSlice = createSlice({
             state.loading = false;
         })
         builder.addCase(registerFetchToken.pending, (state, action) => {
+            state.loading = true;
+        })
+
+
+        builder.addCase(logout.fulfilled, (state, action) => {
+            state.token = null;
+            state.loading = false;
+            state.error = "";
+        })
+        builder.addCase(logout.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.loading = false;
+        })
+        builder.addCase(logout.pending, (state, action) => {
             state.loading = true;
         })
     }

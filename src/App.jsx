@@ -11,6 +11,7 @@ import Loading from './components/layouts/Loading';
 import PrivateRoute from './utils/PrivateRoute';
 import Profile from './components/accounts/Profile';
 import Explore from './components/recipe/Explore';
+import RecipeCreate from './components/recipe/RecipeCreate';
 
 function App() {
 
@@ -25,6 +26,24 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/recipe" element={<Explore />} />
+            <Route
+              exact
+              path="/recipe/:id"
+              element={
+                <PrivateRoute>
+                  <RecipeDetail />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/recipe/create"
+              element={
+                <PrivateRoute>
+                  <RecipeCreate />
+                </PrivateRoute>
+              }
+            />
             <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} >
               <Route path="profile" element={<Profile />} />
             </Route>
