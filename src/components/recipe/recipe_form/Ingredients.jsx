@@ -9,7 +9,7 @@ export default function Ingredients({ editMode, recipe, ingredients, setIngredie
 
   useEffect(() => {
     if (recipe && editMode === true) {
-      const defaultIngredients = JSON.parse(recipe[0].ingredients);
+      const defaultIngredients = JSON.parse(recipe.ingredients);
 
       defaultIngredients.map((defaultIngredient) =>
         setIngredients((e) => [...e, defaultIngredient])
@@ -64,9 +64,9 @@ export default function Ingredients({ editMode, recipe, ingredients, setIngredie
 
                 <div className="mt-2 sm:mt-0 sm:ml-4">
                   <div className="-m-1 flex flex-wrap items-center">
-                    {ingredients.map((ingredient) => (
+                    {ingredients.map((ingredient, key) => (
                       <span
-                        key={ingredient}
+                        key={key}
                         className="m-1 inline-flex rounded-full border border-gray-200 items-center py-1.5 pl-3 pr-2 text-sm font-medium bg-white text-gray-900"
                       >
                         <span>{ingredient}</span>

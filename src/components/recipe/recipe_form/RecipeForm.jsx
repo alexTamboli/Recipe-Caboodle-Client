@@ -62,7 +62,7 @@ export default function RecipeCreate(props) {
                       className="shadow-sm p-2 focus:outline-none focus:ring-teal-500 focus:border-teal-500 mt-1 block w-full border border-gray-300 rounded-md"
                       placeholder="Write a title for your recipe. Something catchy ..."
                       defaultValue={
-                        props.editMode ? props.recipe[0].title : null
+                        props.editMode ? props.recipe.title : null
                       }
                       onChange={(e) => setTitle(e.target.value)}
                     />
@@ -79,7 +79,7 @@ export default function RecipeCreate(props) {
                         className="shadow-sm p-2 focus:outline-none focus:ring-teal-500 focus:border-teal-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                         placeholder="Write a short description..."
                         defaultValue={
-                          props.editMode ? props.recipe[0].desc : null
+                          props.editMode ? props.recipe.desc : null
                         }
                         onChange={(e) => setDesc(e.target.value)}
                       />

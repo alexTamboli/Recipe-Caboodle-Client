@@ -38,7 +38,7 @@ export default function Category({ editMode, recipe, category, setCategory }) {
   }, [category]);
 
   return (
-    <RadioGroup value={editMode ? recipe[0].category.name : category} onChange={setCategory}>
+    <RadioGroup value={editMode ? recipe.category.name : category} onChange={setCategory}>
       <RadioGroup.Label className="text-lg leading-6 font-medium text-gray-900">
         Select a food category
       </RadioGroup.Label>

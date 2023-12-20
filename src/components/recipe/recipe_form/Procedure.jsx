@@ -8,7 +8,7 @@ export default function Procedure({ editMode, recipe, procedures, setProcedures 
 
   useEffect(() => {
     if (recipe && editMode === true) {
-      const defaultProcedures = JSON.parse(recipe[0].procedure);
+      const defaultProcedures = JSON.parse(recipe.procedure);
 
       defaultProcedures.map((defaultProcedure) =>
         setProcedures((e) => [...e, defaultProcedure])
@@ -80,7 +80,7 @@ export default function Procedure({ editMode, recipe, procedures, setProcedures 
             <div className="border-b border-gray-200">
               <ul className="divide-y divide-gray-200">
                 {procedures.map((procedure, idx) => (
-                  <li key={procedure} className="py-4 flex">
+                  <li key={idx} className="py-4 flex">
                     <div className="ml-3 flex flex-grow justify-between">
                       <div>
                         <span className="text-base font-medium text-gray-900">

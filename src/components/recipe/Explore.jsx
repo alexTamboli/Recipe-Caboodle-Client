@@ -5,6 +5,7 @@ import axiosInstance from "../../utils/axios";
 import Loading from "../layouts/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserExtraDetails } from "../../redux/features/user/userSlice";
+import QuickView from "./QuickView";
 
 export default function Explore() {
     const [recipes, setRecipes] = useState(null);
@@ -12,6 +13,8 @@ export default function Explore() {
     const cardLoad = useSelector(state => state.user.loading);
     const liked_array = useSelector(state => state.user.liked_recipes);
     const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState(null);
 
     const getRecipes = async () => {
         try {
@@ -78,11 +81,11 @@ export default function Explore() {
                     {cardLoad ? <Loading /> :
                         <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {recipes.map((recipe, id) => (
-                                <RecipeCard key={id} recipe={recipe} liked_array={liked_array} quickview={true} />
+                                <RecipeCard key={id} setOpen={setOpen} setId={setId} recipe={recipe} liked_array={liked_array} quickview={true} />
                             ))}
                         </div>
                     }
-
+                    {open && <QuickView open={open} setOpen={setOpen} id={id} recipes={recipes} />}
                 </div>
             }
         </>

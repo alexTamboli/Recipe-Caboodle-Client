@@ -7,7 +7,8 @@ export default function TimePicker({ editMode, recipe, setCookTime }) {
   let defaultCookTime;
 
   if (editMode) {
-    defaultCookTime = recipe[0].cook_time.split(":");
+    defaultCookTime = recipe.cook_time.split(":");
+    console.log(defaultCookTime);
   }
 
   const [hours, setHours] = useState(editMode ? defaultCookTime[0] : "0");

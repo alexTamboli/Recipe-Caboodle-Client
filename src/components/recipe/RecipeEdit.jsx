@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RecipeForm from "./recipe_form/RecipeForm";
 
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import Loading from "../layouts/Loading";
+import axiosInstance from "../../utils/axios";
 
 export default function RecipeEdit() {
     const { id } = useParams();
-    const [loading, setLoading] = useState(false);
-    let recipe = null;
+    const [loading, setLoading] = useState(true);
+    const [recipe, setRecipe] = useState(null);
 
     const getRecipeToEdit = async (id) => {
         try {
             setLoading(true);
+            axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
             const res = await axiosInstance.get(`/recipe/${id}/`);
-            return res.data;
+            setRecipe(res.data);
         } catch (err) {
             console.log(err);
         }
@@ -22,10 +24,8 @@ export default function RecipeEdit() {
         }
     }
 
-
-
     useEffect(() => {
-        recipe = getRecipeToEdit(id)
+        getRecipeToEdit(id)
     }, [])
 
 
@@ -47,13 +47,17 @@ export default function RecipeEdit() {
     };
 
     return (
-        <div>
-            <RecipeForm
-                buttonLabel="Update"
-                handleFormSubmit={handleFormSubmit}
-                editMode={true}
-                recipe={recipe}
-            />
-        </div>
+        <>
+            {loading ? <Loading /> :
+                <div>
+                    <RecipeForm
+                        buttonLabel="Update"
+                        handleFormSubmit={handleFormSubmit}
+                        editMode={true}
+                        recipe={recipe}
+                    />
+                </div>
+            }
+        </>
     );
 }
