@@ -19,11 +19,9 @@ export default function Profile() {
 
     const handleAvatarChange = (e) => {
         e.preventDefault();
-        console.log(picture);
         const formData = new FormData();
         formData.append("avatar", picture, picture.name);
-        console.log(formData);
-        dispatch(changeAvatar(picture));
+        dispatch(changeAvatar(formData));
     };
 
     return (

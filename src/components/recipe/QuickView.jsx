@@ -9,10 +9,30 @@ import {
     ClockIcon,
 } from "@heroicons/react/outline";
 
-export default function QuickView({ open, setOpen, id }) {
-    // const recipe = recipes.filter((recipe) => recipe.id === id);
+import { HeartIcon as SolidHeart } from "@heroicons/react/solid";
+import axiosInstance from "../../utils/axios";
 
-    const [like, setLike] = useState(recipe[0].total_number_of_likes);
+export default function QuickView({ open, setOpen, id, recipes }) {
+    const recipe = recipes.filter((recipe) => recipe.id === id);
+
+    const likeRecipe = async (id) => {
+        try {
+            setLike(!like);
+            const token = JSON.parse(localStorage.getItem("token")).access;
+            axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
+            if (like) {
+                await axiosInstance.delete(`/recipe/${id}/like/`, null);
+            } else {
+                await axiosInstance.post(`/recipe/${id}/like/`, null);
+            }
+            console.log("Like request sent successfully!");
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    const [like, setLike] = useState(false);
+    const [likeNum, setLikeNum] = useState(recipe[0].total_number_of_likes);
     const [bookmark, setBookmark] = useState(recipe[0].total_number_of_bookmarks);
 
     return (
@@ -125,19 +145,28 @@ export default function QuickView({ open, setOpen, id }) {
                                                     <button
                                                         type="button"
                                                         className="group py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                                                        onClick={() => {
-                                                            dispatch(likeRecipe(id));
-                                                            setLike(like + 1);
-                                                        }}
+                                                        onClick={likeRecipe}
                                                     >
-                                                        <HeartIcon
-                                                            className="h-6 w-6 flex-shrink-0"
-                                                            aria-hidden="true"
-                                                        />
+                                                        {like ?
+                                                            <SolidHeart
+                                                                className="h-6 w-6 flex-shrink-0"
+                                                                aria-hidden="true"
+                                                                onClick={() => {
+                                                                    setLikeNum(likeNum - 1);
+                                                                }}
+                                                            /> :
+                                                            <HeartIcon
+                                                                className="h-6 w-6 flex-shrink-0"
+                                                                aria-hidden="true"
+                                                                onClick={() => {
+                                                                    setLikeNum(likeNum + 1);
+                                                                }}
+                                                            />
+                                                        }
                                                         <p className="hidden ml-1 group-hover:block">
                                                             Like
                                                         </p>
-                                                        <span className="ml-2">{like}</span>
+                                                        <span className="ml-2">{likeNum}</span>
                                                     </button>
                                                 </div>
 

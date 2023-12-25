@@ -11,6 +11,11 @@ import Loading from './components/layouts/Loading';
 import PrivateRoute from './utils/PrivateRoute';
 import Profile from './components/accounts/Profile';
 import Explore from './components/recipe/Explore';
+import RecipeCreate from './components/recipe/RecipeCreate';
+import RecipeDetailed from './components/recipe/RecipeDetailed';
+import RecipeEdit from './components/recipe/RecipeEdit';
+import MyRecipes from './components/recipe/MyRecipes';
+import SavedRecipes from './components/recipe/SavedRecipes';
 
 function App() {
 
@@ -25,8 +30,37 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/recipe" element={<Explore />} />
+            <Route
+              exact
+              path="/recipe/:id"
+              element={
+                <PrivateRoute>
+                  <RecipeDetailed />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/recipe/create"
+              element={
+                <PrivateRoute>
+                  <RecipeCreate />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/recipe/:id/edit"
+              element={
+                <PrivateRoute>
+                  <RecipeEdit />
+                </PrivateRoute>
+              }
+            />
             <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} >
               <Route path="profile" element={<Profile />} />
+              <Route path="myrecipes" element={<MyRecipes />} />
+              <Route path="savedrecipes" element={<SavedRecipes />} />
             </Route>
           </Routes>
         }
