@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
 import RecipeCard from "./RecipeCard";
 import axiosInstance from "../../utils/axios";
 import Loading from "../layouts/Loading";
@@ -7,19 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserExtraDetails } from "../../redux/features/user/userSlice";
 import QuickView from "./QuickView";
 
-export default function Explore() {
+export default function SavedRecipes() {
     const [recipes, setRecipes] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const cardLoad = useSelector(state => state.user.loading);
     const liked_array = useSelector(state => state.user.liked_recipes);
     const dispatch = useDispatch();
+    const author = useSelector(state => state.user.username);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
 
     const getRecipes = async () => {
         try {
             setIsLoading(true);
-            const res = await axiosInstance.get("/recipe");
+            const res = await axiosInstance.get(`/recipe/?bookmarked_by__user__username=${author}`);
             setRecipes(res.data);
         } catch (err) {
             console.log(err);
@@ -67,7 +67,7 @@ export default function Explore() {
                                 </div>
                             </a>
                             <h2 className="font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl">
-                                <span className="inline-block mb-2">Recipes</span>
+                                <span className="inline-block mb-2">Saved Recipes</span>
                                 <div className="h-1 ml-auto duration-300 origin-left transform bg-teal-600 scale-x-30 group-hover:scale-x-100" />
                             </h2>
                         </div>
@@ -91,3 +91,4 @@ export default function Explore() {
         </>
     );
 }
+

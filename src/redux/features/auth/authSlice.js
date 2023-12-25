@@ -28,9 +28,28 @@ export const registerFetchToken = createAsyncThunk(
 export const loginFetchToken = createAsyncThunk(
     'auth/loginFetchToken',
     async (userData) => {
-        const res = await axiosInstance.post('/user/login/', userData);
-        localStorage.setItem("token", JSON.stringify(res.data.tokens));
-        return res.data.tokens;
+        try {
+            const res = await axiosInstance.post('/user/login/', userData);
+            localStorage.setItem("token", JSON.stringify(res.data.tokens));
+            return res.data.tokens;
+        } catch (error) {
+            if (error.response.data.non_field_errors && error.response.data.non_field_errors[0]) {
+                throw new Error(error.response.data.non_field_errors[0]);
+            } else {
+                throw new Error("Something went wrong");
+            }
+        }
+    }
+)
+
+
+
+export const logout = createAsyncThunk(
+    'auth/logout',
+    async (refresh) => {
+        const body = JSON.stringify({ refresh });
+        await axiosInstance.post('/user/logout/', body);
+        localStorage.removeItem("token");
     }
 )
 
@@ -51,6 +70,8 @@ const authSlice = createSlice({
         builder.addCase(loginFetchToken.pending, (state, action) => {
             state.loading = true;
         })
+
+
         builder.addCase(registerFetchToken.fulfilled, (state, action) => {
             state.token = action.payload;
             state.loading = false;
@@ -62,6 +83,20 @@ const authSlice = createSlice({
             state.loading = false;
         })
         builder.addCase(registerFetchToken.pending, (state, action) => {
+            state.loading = true;
+        })
+
+
+        builder.addCase(logout.fulfilled, (state, action) => {
+            state.token = null;
+            state.loading = false;
+            state.error = "";
+        })
+        builder.addCase(logout.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.loading = false;
+        })
+        builder.addCase(logout.pending, (state, action) => {
             state.loading = true;
         })
     }

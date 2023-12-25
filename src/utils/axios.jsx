@@ -21,6 +21,8 @@ axiosInstance.interceptors.response.use(
             originalRequest.url ===
             "https://recipe-caboodle-backend-server.onrender.com/api/user/token/refresh/"
         ) {
+            //delete token
+            localStorage.removeItem("token");
             window.location.href = "/user/login/";
             return Promise.reject(error);
         }
