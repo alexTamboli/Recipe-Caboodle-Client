@@ -15,19 +15,13 @@ export default function Login() {
 
     useEffect(() => {
         if (token) {
-            navigate("/dashboard");
+            navigate("/dashboard/profile");
         }
     }, [token]);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
         dispatch(loginFetchToken({ email, password }))
-        // dispatch(
-        //     login({
-        //         email: email,
-        //         password: password,
-        //     })
-        // );
     };
 
     return (

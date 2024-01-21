@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerFetchToken } from "../../redux/features/auth/authSlice";
+import { setError } from "../../redux/features/error/errorSlice";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -25,12 +26,6 @@ export default function Register() {
         e.preventDefault();
         dispatch(
             registerFetchToken({ username, email, password, confirmPassword })
-            // register({
-            //     username: username,
-            //     email: email,
-            //     password: password,
-            //     confirmPassword: confirmPassword,
-            // })
         );
     };
 

@@ -15,6 +15,8 @@ import {
 import RecipeDelete from "./RecipeDelete";
 import Loading from "../layouts/Loading";
 import axiosInstance from "../../utils/axios";
+import { useDispatch } from "react-redux";
+import { setError } from "../../redux/features/error/errorSlice";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -27,6 +29,8 @@ export default function RecipeDetailed() {
     const [detailRecipe, setDetailRecipe] = useState(null);
 
     const { id } = useParams();
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         specificRecipe(parseInt(id))
@@ -60,7 +64,7 @@ export default function RecipeDetailed() {
             setDetailRecipe(res.data);
             return res.data;
         } catch (err) {
-            console.log(err);
+            dispatch(setError(err.message));
         } finally {
             setLoading(false);
         }
