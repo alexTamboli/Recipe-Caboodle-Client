@@ -9,7 +9,7 @@ const initialState = {
 
 export const registerFetchToken = createAsyncThunk(
     'auth/registerFetchToken',
-    async (userData) => {
+    async ({ username, email, password, confirmPassword }) => {
         if (password === confirmPassword) {
             const body = JSON.stringify({
                 username,
@@ -56,6 +56,11 @@ export const logout = createAsyncThunk(
 const authSlice = createSlice({
     name: 'auth',
     initialState,
+    reducers: {
+        clearAuthError(state) {
+            state.error = null;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(loginFetchToken.fulfilled, (state, action) => {
             state.token = action.payload;
@@ -102,5 +107,5 @@ const authSlice = createSlice({
     }
 })
 
+export const { clearAuthError } = authSlice.actions;
 export default authSlice.reducer;
-// export const authActions = authSlice.actions;

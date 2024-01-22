@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Menu, Popover, Transition } from "@headlessui/react";
@@ -19,6 +19,8 @@ export default function Header() {
     const { token } = useSelector((state) => state.auth);
     const user = useSelector((state) => state.user);
     const [modal, setModal] = useState(false);
+    const [searchText, setSearchText] = useState("");
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
 
@@ -27,6 +29,14 @@ export default function Header() {
             dispatch(fetchUser());
         }
     }, [token]);
+
+    const handleKeyPress = (event) => {
+        if (event.key === "Enter") {
+            if (searchText) {
+                navigate(`/recipe/search?query=${encodeURIComponent(searchText)}`);
+            }
+        }
+    };
 
     return (
         <>
@@ -70,6 +80,9 @@ export default function Header() {
                                                     className="block w-full bg-white border border-gray-300 rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:outline-none focus:text-gray-900 focus:placeholder-gray-400 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                                     placeholder="Search"
                                                     type="search"
+                                                    defaultValue={searchText}
+                                                    onChange={(e) => setSearchText(e.target.value)}
+                                                    onKeyDown={handleKeyPress}
                                                 />
                                             </div>
                                         </div>

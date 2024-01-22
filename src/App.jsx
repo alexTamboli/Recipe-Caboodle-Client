@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/layouts/Header";
 import Landing from "./components/layouts/Landing";
@@ -16,6 +15,8 @@ import RecipeDetailed from './components/recipe/RecipeDetailed';
 import RecipeEdit from './components/recipe/RecipeEdit';
 import MyRecipes from './components/recipe/MyRecipes';
 import SavedRecipes from './components/recipe/SavedRecipes';
+import Search from "./components/recipe/Search";
+import Error from './components/Error';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
     <>
       <Router>
         <Header />
+        <Error />
         {authLoading ? <Loading /> :
           <Routes>
             <Route exact path="/" element={<Landing />} />
@@ -31,7 +33,6 @@ function App() {
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/recipe" element={<Explore />} />
             <Route
-              exact
               path="/recipe/:id"
               element={
                 <PrivateRoute>
@@ -39,6 +40,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route exact path="/recipe/search" element={<Search />} />
             <Route
               exact
               path="/recipe/create"

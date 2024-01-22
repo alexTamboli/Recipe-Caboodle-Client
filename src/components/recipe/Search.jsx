@@ -6,23 +6,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserExtraDetails } from "../../redux/features/user/userSlice";
 import QuickView from "./QuickView";
 import { setError } from "../../redux/features/error/errorSlice";
+import { useLocation, useParams } from "react-router-dom";
 
-export default function MyRecipes() {
+export default function Search() {
     const [recipes, setRecipes] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const cardLoad = useSelector(state => state.user.loading);
+    const bookmarked_array = useSelector(state => state.user.bookmarks);
+    const liked_array = useSelector(state => state.user.liked_recipes);
     const dispatch = useDispatch();
-    const author = useSelector(state => state.user.username);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
-
-    const liked_array = useSelector(state => state.user.liked_recipes);
-    const bookmarked_array = useSelector(state => state.user.bookmarks);
+    let location = useLocation();
+    let searchParams = new URLSearchParams(location.search);
+    let searchText = searchParams.get("query");
 
     const getRecipes = async () => {
         try {
             setIsLoading(true);
-            const res = await axiosInstance.get(`/recipe/?author__username=${author}`);
+            const res = await axiosInstance.get(`/recipe/?search=${searchText}`);
             setRecipes(res.data);
             setIsLoading(false);
         } catch (err) {
@@ -34,7 +36,7 @@ export default function MyRecipes() {
     useEffect(() => {
         getRecipes();
         dispatch(fetchUserExtraDetails());
-    }, [author]);
+    }, [location]);
 
     if (recipes && recipes.length === 0)
         return (
@@ -69,7 +71,7 @@ export default function MyRecipes() {
                                 </div>
                             </a>
                             <h2 className="font-sans text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl">
-                                <span className="inline-block mb-2">My Recipes</span>
+                                <span className="inline-block mb-2">Recipes</span>
                                 <div className="h-1 ml-auto duration-300 origin-left transform bg-teal-600 scale-x-30 group-hover:scale-x-100" />
                             </h2>
                         </div>
@@ -80,7 +82,7 @@ export default function MyRecipes() {
                             what doesn’t."
                         </p>
                     </div>
-                    {(cardLoad || !author) ? <Loading /> :
+                    {cardLoad ? <Loading /> :
                         <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {recipes.map((recipe, id) => (
                                 <RecipeCard key={id} setOpen={setOpen} setId={setId} recipe={recipe} liked_array={liked_array} bookmarked_array={bookmarked_array} quickview={true} />
@@ -93,4 +95,3 @@ export default function MyRecipes() {
         </>
     );
 }
-
