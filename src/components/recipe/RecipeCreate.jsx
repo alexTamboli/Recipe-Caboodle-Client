@@ -3,9 +3,13 @@ import RecipeForm from "./recipe_form/RecipeForm";
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
 import Loading from "../layouts/Loading";
+import { setError } from "../../redux/features/error/errorSlice";
+import { useDispatch } from "react-redux";
 
 export default function RecipeCreate() {
     const [loading, setLoading] = useState(false);
+
+    const dispatch = useDispatch();
 
     const handleFormSubmit = async (formData) => {
         try {
@@ -16,7 +20,7 @@ export default function RecipeCreate() {
             window.location.href = `/recipe/${res.data.id}/`;
         }
         catch (err) {
-            console.log(err);
+            dispatch(setError(err.message));
         }
         finally {
             setLoading(false);

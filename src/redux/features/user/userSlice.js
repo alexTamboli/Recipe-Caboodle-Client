@@ -40,9 +40,23 @@ export const editUser = createAsyncThunk(
 export const changePassword = createAsyncThunk(
     'user/changePassword',
     async (body) => {
-        axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
-        const res = await axiosInstance.put('/user/password/change', body);
-        return res.data;
+        try {
+            axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
+            const res = await axiosInstance.put('/user/password/change', body);
+            return res.data;
+        } catch (error) {
+            if (error.response.data.old_password && error.response.data.old_password[0]) {
+                throw new Error(error.response.data.old_password[0]);
+            }
+            else if (error.response.data.new_password && error.response.data.new_password[0]) {
+                throw new Error(error.response.data.new_password[0]);
+            } else {
+                throw new Error("Something went wrong");
+            }
+        }
+
+
+
     }
 )
 
@@ -82,6 +96,11 @@ export const fetchUserExtraDetails = createAsyncThunk(
 const userSlice = createSlice({
     name: 'user',
     initialState,
+    reducers: {
+        clearUserError(state) {
+            state.error = null;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchUser.fulfilled, (state, action) => {
             state.username = action.payload.user.username;
@@ -161,4 +180,5 @@ const userSlice = createSlice({
     }
 })
 
+export const { clearUserError } = userSlice.actions;
 export default userSlice.reducer;

@@ -3,21 +3,25 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import axiosInstance from "../../utils/axios";
 import Loading from "../layouts/Loading";
+import { useDispatch } from "react-redux";
+import { setError } from "../../redux/features/error/errorSlice";
 
 export default function Logout({ modal, setModal, id }) {
     const cancelButtonRef = useRef(null);
     const [loading, setLoading] = useState(false);
+
+    const dispatch = useDispatch();
 
     const handleDeleteClick = async (id) => {
         try {
             setLoading(true);
             await axiosInstance.delete(`/recipe/${id}/`);
         } catch (err) {
-            console.log(err);
+            dispatch(setError(err.message));
         } finally {
             setLoading(false);
             setModal(false);
-            window.location.href = "/dashboard"
+            window.location.href = "/dashboard/profile/"
         }
     };
 

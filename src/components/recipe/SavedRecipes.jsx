@@ -5,26 +5,27 @@ import Loading from "../layouts/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserExtraDetails } from "../../redux/features/user/userSlice";
 import QuickView from "./QuickView";
+import { setError } from "../../redux/features/error/errorSlice";
 
 export default function SavedRecipes() {
     const [recipes, setRecipes] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const cardLoad = useSelector(state => state.user.loading);
-    const liked_array = useSelector(state => state.user.liked_recipes);
     const dispatch = useDispatch();
     const author = useSelector(state => state.user.username);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
+    const liked_array = useSelector(state => state.user.liked_recipes);
+    const bookmarked_array = useSelector(state => state.user.bookmarks);
 
     const getRecipes = async () => {
         try {
             setIsLoading(true);
             const res = await axiosInstance.get(`/recipe/?bookmarked_by__user__username=${author}`);
             setRecipes(res.data);
-        } catch (err) {
-            console.log(err);
-        } finally {
             setIsLoading(false);
+        } catch (err) {
+            dispatch(setError(err.message));
         }
     };
 
@@ -32,7 +33,7 @@ export default function SavedRecipes() {
     useEffect(() => {
         getRecipes();
         dispatch(fetchUserExtraDetails());
-    }, []);
+    }, [author]);
 
     if (recipes && recipes.length === 0)
         return (
@@ -78,10 +79,10 @@ export default function SavedRecipes() {
                             what doesn’t."
                         </p>
                     </div>
-                    {cardLoad ? <Loading /> :
+                    {(cardLoad || !author) ? <Loading /> :
                         <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {recipes.map((recipe, id) => (
-                                <RecipeCard key={id} setOpen={setOpen} setId={setId} recipe={recipe} liked_array={liked_array} quickview={true} />
+                                <RecipeCard key={id} setOpen={setOpen} setId={setId} recipe={recipe} liked_array={liked_array} bookmarked_array={bookmarked_array} quickview={true} />
                             ))}
                         </div>
                     }

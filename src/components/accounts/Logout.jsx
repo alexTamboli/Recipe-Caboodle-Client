@@ -16,7 +16,6 @@ export default function Logout({ modal, setModal }) {
         }
     }, [token]);
 
-
     const handleLogoutClick = () => {
         dispatch(logout(JSON.parse(localStorage.getItem("token")).refresh));
     };

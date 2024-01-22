@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { HeartIcon, BookmarkIcon } from "@heroicons/react/outline";
-import { HeartIcon as SolidHeart } from "@heroicons/react/solid";
-import axiosInstance from "../../utils/axios";
+import { HeartIcon as SolidHeart, BookmarkIcon as SolidBookmark } from "@heroicons/react/solid";
+import { likeRecipe } from "../../utils/likeFun";
+import { bookmarkRecipe } from "../../utils/bookmarkFun";
+import { setError } from "../../redux/features/error/errorSlice";
+import { useDispatch } from "react-redux";
 
+export default function RecipeCard({ recipe, quickview, liked_array, bookmarked_array, setOpen, setId }) {
 
-export default function RecipeCard({ recipe, quickview, liked_array, setOpen, setId }) {
+    const dispatch = useDispatch();
 
     const linearSearch = (arr, target) => {
         for (let i = 0; i < arr.length; i++) {
@@ -16,23 +20,24 @@ export default function RecipeCard({ recipe, quickview, liked_array, setOpen, se
         return false;
     };
 
-    const [like, setLike] = useState(linearSearch(liked_array, recipe.id));
-
-    const likeRecipe = async (id) => {
+    const handleLike = async (id) => {
         try {
-            setLike(!like);
-            const token = JSON.parse(localStorage.getItem("token")).access;
-            axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
-            if (like) {
-                await axiosInstance.delete(`/recipe/${id}/like/`, null);
-            } else {
-                await axiosInstance.post(`/recipe/${id}/like/`, null);
-            }
-            console.log("Like request sent successfully!");
+            await likeRecipe(id, like, setLike);
         } catch (error) {
-            console.error("Error:", error);
+            dispatch(setError(error.message));
         }
-    };
+    }
+
+    const handleBookmark = async (id) => {
+        try {
+            await bookmarkRecipe(id, bookmark, setBookmark);
+        } catch (error) {
+            dispatch(setError(error.message));
+        }
+    }
+
+    const [like, setLike] = useState(linearSearch(liked_array, recipe.id));
+    const [bookmark, setBookmark] = useState(linearSearch(bookmarked_array, recipe.id));
 
     return (
         <>
@@ -96,29 +101,34 @@ export default function RecipeCard({ recipe, quickview, liked_array, setOpen, se
                                 <SolidHeart
                                     className="h-6 w-6 text-red-500 "
                                     aria-hidden="true"
-                                    onClick={() => {
-                                        likeRecipe(recipe.id);
-                                    }}
+                                    onClick={() => handleLike(recipe.id)}
                                 /> :
                                 <HeartIcon
                                     className="h-6 w-6 text-gray-400 hover:text-red-500 transition duration-500 ease-in-out "
                                     aria-hidden="true"
-                                    onClick={() => {
-                                        likeRecipe(recipe.id);
-                                    }}
+                                    onClick={() => handleLike(recipe.id)}
                                 />
                             }
                         </button>
 
                         <div className="w-px h-6 bg-gray-400" />
                         <button type="button">
-                            <BookmarkIcon
-                                className="h-6 w-6 text-gray-400"
-                                aria-hidden="true"
-                                onClick={() => {
-                                    dispatch(saveRecipe(recipe.author, id));
-                                }}
-                            />
+                            {bookmark ?
+                                <SolidBookmark
+                                    className="h-6 w-6 text-green-500"
+                                    aria-hidden="true"
+                                    onClick={() => {
+                                        handleBookmark(recipe.id);
+                                    }}
+                                /> :
+                                <BookmarkIcon
+                                    className="h-6 w-6 text-gray-400"
+                                    aria-hidden="true"
+                                    onClick={() => {
+                                        handleBookmark(recipe.id);
+                                    }}
+                                />
+                            }
                         </button>
                     </div>
                 </div>
