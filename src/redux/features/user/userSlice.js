@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utils/axios';
-import axios from 'axios';
 
 const initialState = {
     username: "",
@@ -18,17 +17,14 @@ export const editUser = createAsyncThunk(
     async (data) => {
         let res = null;
         if (data.email !== "" && data.username !== "") {
-            axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
             res = await axiosInstance.patch('/user/', data);
         }
         else if (data.email === "" && data.username !== "") {
             delete data.email;
-            axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
             res = await axiosInstance.patch('/user/', data);
         }
         else if (data.username === "" && data.email !== "") {
             delete data.username;
-            axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
             res = await axiosInstance.patch('/user/', data);
         } else {
             throw new Error("No data to update");
@@ -41,7 +37,6 @@ export const changePassword = createAsyncThunk(
     'user/changePassword',
     async (body) => {
         try {
-            axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
             const res = await axiosInstance.put('/user/password/change', body);
             return res.data;
         } catch (error) {
@@ -63,7 +58,6 @@ export const changePassword = createAsyncThunk(
 export const changeAvatar = createAsyncThunk(
     'user/changeAvatar',
     async (data) => {
-        axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
         axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
         const res = await axiosInstance.patch('/user/profile/avatar/', data);
         return res.data;
@@ -73,7 +67,6 @@ export const changeAvatar = createAsyncThunk(
 export const fetchUser = createAsyncThunk(
     'user/fetchUser',
     async () => {
-        axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
         const resUser = await axiosInstance.get('/user/');
         const resAvatar = await axiosInstance.get('/user/profile/avatar/');
         const res = {
@@ -87,7 +80,6 @@ export const fetchUser = createAsyncThunk(
 export const fetchUserExtraDetails = createAsyncThunk(
     'user/fetchUserExtraDetails',
     async () => {
-        axiosInstance.defaults.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem("token")).access}`;
         const res = await axiosInstance.get('/user/profile');
         return res.data;
     }

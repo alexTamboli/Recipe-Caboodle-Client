@@ -12,6 +12,7 @@ export default function RecipeCard({ recipe, quickview, liked_array, bookmarked_
     const dispatch = useDispatch();
 
     const linearSearch = (arr, target) => {
+        if (!arr) return false;
         for (let i = 0; i < arr.length; i++) {
             if (arr[i] === target) {
                 return true;
