@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utils/axios';
+import axios from 'axios';
+import { baseURL } from '../../../utils/axios';
 
 const initialState = {
     token: JSON.parse(localStorage.getItem("token")),
@@ -11,12 +13,7 @@ export const registerFetchToken = createAsyncThunk(
     'auth/registerFetchToken',
     async ({ username, email, password, confirmPassword }) => {
         if (password === confirmPassword) {
-            const body = JSON.stringify({
-                username,
-                email,
-                password,
-            });
-            const res = await axiosInstance.post('/user/register/', body);
+            const res = await axios.post(`${baseURL}/user/register/`, { username, email, password });
             localStorage.setItem("token", JSON.stringify(res.data.tokens));
             return res.data.tokens;
         } else {
@@ -29,7 +26,7 @@ export const loginFetchToken = createAsyncThunk(
     'auth/loginFetchToken',
     async (userData) => {
         try {
-            const res = await axiosInstance.post('/user/login/', userData);
+            const res = await axios.post(`${baseURL}/user/login/`, userData);
             localStorage.setItem("token", JSON.stringify(res.data.tokens));
             return res.data.tokens;
         } catch (error) {
@@ -42,13 +39,11 @@ export const loginFetchToken = createAsyncThunk(
     }
 )
 
-
-
 export const logout = createAsyncThunk(
     'auth/logout',
     async (refresh) => {
-        const body = JSON.stringify({ refresh });
-        await axiosInstance.post('/user/logout/', body);
+        // const body = JSON.stringify({ refresh });
+        await axiosInstance.post('/user/logout/', { refresh });
         localStorage.removeItem("token");
     }
 )
@@ -72,7 +67,7 @@ const authSlice = createSlice({
             state.error = action.error.message;
             state.loading = false;
         })
-        builder.addCase(loginFetchToken.pending, (state, action) => {
+        builder.addCase(loginFetchToken.pending, (state) => {
             state.loading = true;
         })
 
@@ -87,12 +82,12 @@ const authSlice = createSlice({
             state.error = action.error.message;
             state.loading = false;
         })
-        builder.addCase(registerFetchToken.pending, (state, action) => {
+        builder.addCase(registerFetchToken.pending, (state) => {
             state.loading = true;
         })
 
 
-        builder.addCase(logout.fulfilled, (state, action) => {
+        builder.addCase(logout.fulfilled, (state) => {
             state.token = null;
             state.loading = false;
             state.error = "";
@@ -101,7 +96,7 @@ const authSlice = createSlice({
             state.error = action.error.message;
             state.loading = false;
         })
-        builder.addCase(logout.pending, (state, action) => {
+        builder.addCase(logout.pending, (state) => {
             state.loading = true;
         })
     }
